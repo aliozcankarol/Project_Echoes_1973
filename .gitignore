@@ -1,0 +1,18 @@
+# İşletim sistemi dosyaları
+.DS_Store
+
+# Çevre değişkenleri ve gizli anahtarlar
+.env
+
+# Node modülleri (Angular veya Backend için)
+node_modules/
+
+# Flutter/Dart dosyaları (Eğer Flutter kullanılacaksa)
+.dart_tool/
+build/
+.pub-cache/
+.pub/
+
+# Python sanal ortamları (Eğer backend'de kullanılacaksa)
+venv/
+__pycache__/

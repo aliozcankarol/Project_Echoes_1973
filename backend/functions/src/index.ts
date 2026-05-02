@@ -8,7 +8,7 @@ export const processEcho = functions.https.onCall(async (data, context) => {
   const userInput = data.userInput;
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-  const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
+
 
   if (!userInput || typeof userInput !== "string") {
     throw new functions.https.HttpsError(
@@ -31,7 +31,7 @@ If it is safe, reply with "SAFE".
 Input: "${userInput}"`;
 
   try {
-    const securityModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const securityModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const securityResult = await securityModel.generateContent(securityPrompt);
     const securityText = securityResult.response.text().trim();
 
@@ -55,7 +55,7 @@ Ensure the output is strictly valid JSON and nothing else.
 Input: "${userInput}"`;
 
     const emotionModel = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-pro",
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
       }
@@ -72,36 +72,28 @@ Input: "${userInput}"`;
       throw new Error("Failed to parse LLM response into JSON");
     }
 
-    // Step 3: Image Gen (Hugging Face Inference API)
-    let imageUrl = "https://via.placeholder.com/512"; 
-    
-    if (HUGGINGFACE_API_KEY && HUGGINGFACE_API_KEY !== "your_huggingface_api_key_here") {
-      const hfResponse = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${HUGGINGFACE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          inputs: emotionJson.image_generation_prompt,
-        }),
-      });
+    // Step 3: Image Gen (Using Pollinations AI as a reliable fallback)
+    const encodedPrompt = encodeURIComponent(emotionJson.image_generation_prompt || "A 1973 vintage polaroid");
+    const pollUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true`;
 
-      if (hfResponse.ok) {
-        // Convert arrayBuffer to Base64
-        const imageBuffer = await hfResponse.arrayBuffer();
-        const base64Image = Buffer.from(imageBuffer).toString('base64');
-        imageUrl = `data:image/jpeg;base64,${base64Image}`;
+    let finalImageUrl = pollUrl;
+    try {
+      const imageResponse = await fetch(pollUrl);
+      if (imageResponse.ok) {
+        const arrayBuffer = await imageResponse.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64String = buffer.toString("base64");
+        finalImageUrl = `data:image/jpeg;base64,${base64String}`;
       } else {
-        console.error("Image generation failed. Error:", hfResponse.statusText);
+        console.warn(`Pollinations AI returned status ${imageResponse.status}`);
       }
-    } else {
-      console.log("No valid HUGGINGFACE_API_KEY provided. Using placeholder image.");
+    } catch (e) {
+      console.error("Failed to fetch image from Pollinations:", e);
     }
 
     // Step 4: Return formatted response to Flutter Client
     return {
-      imageUrl: imageUrl,
+      imageUrl: finalImageUrl,
       color_palette: emotionJson.color_palette,
       poetic_echo: emotionJson.poetic_echo
     };

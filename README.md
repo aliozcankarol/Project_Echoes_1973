@@ -18,10 +18,10 @@ In Dylan's narrative, the "door" represents the ultimate threshold between the k
 This project demonstrates the practical integration of two foundational Generative AI modalities to create a cohesive, emotionally aware pipeline:
 
 1. **Natural Language Processing (NLP) / Large Language Models (LLMs):** 
-   Utilizing the OpenAI API (`gpt-4o` and `gpt-4o-mini`), the system performs advanced semantic analysis. It first acts as a contextual security firewall, rejecting modern technological anachronisms to preserve the 1973 aesthetic. It then acts as a sentiment analyzer and creative prompt generator, dissecting the user's emotional state to synthesize a color palette, a Dylan-esque poetic response, and a highly detailed aesthetic prompt for the image generation model.
+   Utilizing the Google Gemini API (`gemini-2.5-flash`), the system performs advanced semantic analysis. It first acts as a contextual security firewall, rejecting modern technological anachronisms to preserve the 1973 aesthetic. It then acts as a sentiment analyzer and creative prompt generator, dissecting the user's emotional state to synthesize a color palette, a Dylan-esque poetic response, and a highly detailed aesthetic prompt for the image generation model.
    
 2. **Text-to-Image Generation:** 
-   Leveraging Latent Diffusion Models (via the Stable Diffusion API), the project translates the NLP-generated prompt from text into the visual domain. It enforces a strict aesthetic constraint (1973 vintage polaroid, analog film, Sam Peckinpah cinematic style), rendering the mathematical latent space into a nostalgic, visual artifact.
+   Leveraging Latent Diffusion Models (via Pollinations AI), the project translates the NLP-generated prompt from text into the visual domain. It enforces a strict aesthetic constraint (1973 vintage polaroid, analog film, Sam Peckinpah cinematic style), rendering the mathematical latent space into a nostalgic, visual artifact.
 
 ## 🏗 Technical Architecture
 
@@ -35,9 +35,9 @@ A minimalist, cross-platform UI designed with clean architecture principles.
 ### Backend: Firebase Cloud Functions (Node.js/TypeScript)
 A serverless integration layer (`processEcho`) that orchestrates the Generative AI pipeline sequentially:
 1. **Input Reception:** Receives the user's input string from the Flutter client.
-2. **Phase 1: The Firewall:** Queries `gpt-4o-mini` to detect prompt injection or anachronistic references. Throws an HTTPS error with a melancholic refusal if triggered.
-3. **Phase 2: The Art Director:** Queries `gpt-4o` to extract the emotional resonance and generate a structured JSON response containing hex colors, poetic text, and a synthesized image prompt.
-4. **Phase 3: The Manifestation:** Forwards the synthesized prompt to the Stable Diffusion API.
+2. **Phase 1: The Firewall:** Queries `gemini-2.5-flash` to detect prompt injection or anachronistic references. Throws an HTTPS error with a melancholic refusal if triggered.
+3. **Phase 2: The Art Director:** Queries `gemini-2.5-flash` to extract the emotional resonance and generate a structured JSON response containing hex colors, poetic text, and a synthesized image prompt.
+4. **Phase 3: The Manifestation:** Forwards the synthesized prompt to Pollinations AI to generate the vintage polaroid imagery.
 5. **Response:** Returns the aggregated data (Image URL, Palette, Poetry) back to the client.
 
 ## 🛠 Installation & Review Guide
@@ -62,10 +62,10 @@ For course reviewers and developers, follow these steps to run *Echoes of 1973* 
 3. Configure Environment Variables:
    Create a file named `.env` in the `backend/functions/` directory and add your API keys:
    ```env
-   OPENAI_API_KEY="your_openai_api_key_here"
-   STABLE_DIFFUSION_API_KEY="your_stable_diffusion_api_key_here"
+   GEMINI_API_KEY="your_gemini_api_key_here"
+   HUGGINGFACE_API_KEY="your_huggingface_api_key_here"
    ```
-   *(Note: The `.env` file is excluded from version control via `.gitignore`.)*
+   *(Note: The Hugging Face API key was used for alternative image generation testing. The `.env` file is excluded from version control via `.gitignore`.)*
 
 4. Build and run the Firebase emulator (optional, for local backend testing):
    ```bash

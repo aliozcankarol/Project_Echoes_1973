@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -165,32 +166,49 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                         0.272, 0.534, 0.131, 0, 0,
                         0,     0,     0,     1, 0,
                       ]), // Sepia filter
-                      child: Image.network(
-                        response.imageUrl,
-                        width: 300,
-                        height: 300,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const SizedBox(
+                      child: response.imageUrl.startsWith('data:image') 
+                        ? Image.memory(
+                            base64Decode(response.imageUrl.split(',').last),
                             width: 300,
                             height: 300,
-                            child: Center(
-                              child: CircularProgressIndicator(color: Colors.white38),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 300,
+                                height: 300,
+                                color: Colors.black12,
+                                child: const Center(
+                                  child: Icon(Icons.broken_image, color: Colors.white24, size: 50),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            response.imageUrl,
                             width: 300,
                             height: 300,
-                            color: Colors.black12,
-                            child: const Center(
-                              child: Icon(Icons.broken_image, color: Colors.white24, size: 50),
-                            ),
-                          );
-                        },
-                      ),
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Center(
+                                  child: CircularProgressIndicator(color: Colors.white38),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 300,
+                                height: 300,
+                                color: Colors.black12,
+                                child: const Center(
+                                  child: Icon(Icons.broken_image, color: Colors.white24, size: 50),
+                                ),
+                              );
+                            },
+                          ),
                     ),
                   ),
                 );

@@ -13,7 +13,14 @@ class EchoService extends ChangeNotifier {
   EchoResponse? get response => _response;
   String? get errorMessage => _errorMessage;
 
-  final FirebaseFunctions _functions = FirebaseFunctions.instance;
+  late final FirebaseFunctions _functions;
+
+  EchoService() {
+    _functions = FirebaseFunctions.instance;
+    if (kDebugMode) {
+      _functions.useFunctionsEmulator('localhost', 5001);
+    }
+  }
 
   Future<void> submitEcho(String userInput) async {
     if (userInput.trim().isEmpty) return;

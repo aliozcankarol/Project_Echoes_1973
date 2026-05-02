@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/main_screen.dart';
@@ -11,7 +12,19 @@ void main() async {
   // For web, you'll need the Firebase configuration options here or in index.html.
   // We're wrapping it in a try-catch for demonstration since configuration might not be fully complete.
   try {
-    await Firebase.initializeApp();
+    if (kIsWeb) {
+      // Provide dummy options for local web testing so Firebase doesn't crash
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "dummy-key",
+          appId: "1:1234567890:web:1234567890",
+          messagingSenderId: "1234567890",
+          projectId: "demo-no-project",
+        ),
+      );
+    } else {
+      await Firebase.initializeApp();
+    }
   } catch (e) {
     debugPrint("Firebase initialization error: $e");
   }

@@ -60,12 +60,12 @@ For course reviewers and developers, follow these steps to run *Echoes of 1973* 
    npm install
    ```
 3. Configure Environment Variables:
-   Create a file named `.env` in the `backend/functions/` directory and add your API keys:
+   Create a file named `.env` in the `backend/functions/` directory and add your API keys. 
+   You can obtain a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
    ```env
    GEMINI_API_KEY="your_gemini_api_key_here"
-   HUGGINGFACE_API_KEY="your_huggingface_api_key_here"
    ```
-   *(Note: The Hugging Face API key was used for alternative image generation testing. The `.env` file is excluded from version control via `.gitignore`.)*
+   *(Note: Pollinations AI is used for image generation and does not require an API key. The `.env` file is excluded from version control via `.gitignore`.)*
 
 4. Build and run the Firebase emulator (optional, for local backend testing):
    ```bash
@@ -89,6 +89,20 @@ For course reviewers and developers, follow these steps to run *Echoes of 1973* 
    ```bash
    flutter run
    ```
+
+## 🖼️ Example Outputs
+
+Here is an example of what the user might experience when interacting with *Echoes of 1973*.
+
+**User Input:**
+> *"I'm leaving behind my old leather jacket that I wore when I first left home."*
+
+**AI Analysis & Poetic Response:**
+> *The open road calls, but the weight of the past remains. / The scent of rain on worn leather fades into the dusk. / A discarded shell, no longer needed for the journey ahead.*
+
+**Generated Artwork:**
+
+![Example Output](https://image.pollinations.ai/prompt/vintage%20polaroid%20of%20a%20worn%20leather%20jacket%20left%20on%20a%20highway%20guardrail,%20sepia%20tone,%20cinematic%20lighting?width=512&height=512&nologo=true)
 
 ---
 *“It’s gettin’ dark, too dark to see / I feel like I'm knockin' on heaven's door.”*
